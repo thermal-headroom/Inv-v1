@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Invoice Form</title>
 </head>
 <body>
-    <h1>hello world</h1>
-    <script>
-        // thiss is a comment to be the first of many in java
-        console.log('hello world');
-    </script>
+  <form action="save_invoice.php" method="POST">
+    <input type="text" name="client_name" placeholder="Client Name" required/>
+    <input type="number" name="invoice_number" placeholder="Invoice Number" required/>
+    <!-- Add other necessary fields here -->
+    <input type="submit" value="Save Invoice"/>
+  </form>
+  <button onclick="location.href='view_invoices.php'">View Saved Invoices</button>
 </body>
 </html>
