@@ -1,7 +1,4 @@
 <?php
-require 'vendor/autoload.php';
-
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 // Get the POST data
 $client_name = trim($_POST['client_name']);
@@ -34,27 +31,16 @@ if (file_put_contents($json_file_name, json_encode($data)) === false) {
     die('Failed to write to JSON file.');
 }
 
-// Load the Excel template
-$templatePath = 'path_to_your_template.xlsx';
-try {
-    $spreadsheet = IOFactory::load($templatePath);
-} catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
-    die('Failed to load Excel template: ' . $e->getMessage());
+// Create CSV
+$csv_file_name = $invoice_dir . '/' . date('d') . '-' . $invoice_number . '.csv';
+$file = fopen($csv_file_name, 'w');
+if (!$file) {
+    die('Failed to open CSV file for writing.');
 }
 
-// Fill in the data
-$worksheet = $spreadsheet->getActiveSheet();
-$worksheet->getCell('A1')->setValue($client_name);
-$worksheet->getCell('B1')->setValue($invoice_number);
-
-// Save your filled-in template as a new file
-$excel_file_name = $invoice_dir . '/' . date('d') . '-' . $invoice_number . '.xlsx';
-$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-try {
-    $writer->save($excel_file_name);
-} catch (\PhpOffice\PhpSpreadsheet\Writer\Exception $e) {
-    die('Failed to write to Excel file: ' . $e->getMessage());
-}
+fputcsv($file, ['Client Name', 'Invoice Number']);
+fputcsv($file, [$client_name, $invoice_number]);
+fclose($file);
 
 // Redirect to the invoices page
 header('Location: view_invoices.php');
